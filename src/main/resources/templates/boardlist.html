@@ -29,7 +29,10 @@
         -->
         <tr th:each="board : ${list}">
             <td th:text="${board.id}">1</td>
-            <td th:text="${board.title}">제목입니다.</td>
+            <td>
+                <!--localhost:8090/board/view?id=불러오는 게시글마다 id를 받아와서 넘겨진다.-->
+                <a th:text="${board.title}" th:href="@{/board/view(id=${board.id})}"></a>
+            </td>
         </tr>
         </tbody>
     </table>
