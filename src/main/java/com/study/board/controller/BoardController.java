@@ -38,4 +38,12 @@ public class BoardController {
         model.addAttribute("board", boardService.boardView(id));
         return "boardview";
     }
+
+    @GetMapping("/board/delete")
+    public String boardDelete(Integer id) {
+        boardService.boardDelete(id);
+
+        // 게시물 삭제하고 리스트 페이지로 리다이렉트 시킨다.
+        return "redirect:/board/list";
+    }
 }

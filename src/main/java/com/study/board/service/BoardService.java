@@ -27,10 +27,16 @@ public class BoardService {
 
     // 특정 게시글 불러오기
     public Board boardView(Integer id) {
-        // jpa @repository 자체에 Id로 지정한 걸로 entity 찾는 findById를 메서드 있음
+        // jpa @repository 자체에 Id로 지정한 걸로 entity 찾는 findById() 메서드 있음
         // findById()는 Optional로 값을 받아온다.
         // 뒤에 .get() 을 붙여주면 빨간 줄 사라진다.
         // └→ 값이 null일 경우 NoSuchElementException이 발생한다.
         return boardRepository.findById(id).get();
+    }
+
+    // 특정 게시글 삭제
+    public void boardDelete(Integer id) {
+        // jpa @repository 자체에 Id로 지정한 걸로 entity 삭제하는 deleteById() 메서드 있음
+        boardRepository.deleteById(id);
     }
 }
