@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<script th:inline="javascript">
+
+  /*<![CDATA[*/
+
+  // 컨트롤러가 메세지 주면, 여기에 담아서 alert()로 화면에 띄워줄거임
+  var message = [[${message}]];
+  alert(message);
+
+  // 페이지를 이동시켜줌
+  location.replace([[${searchUrl}]]);
+
+  /*]]>*/
+
+  // → 메시지는 이렇게 하나 만들어놓고 여러 군데에서 사용하면 된다.
+
+</script>
+
+<body>
+</body>
+</html>

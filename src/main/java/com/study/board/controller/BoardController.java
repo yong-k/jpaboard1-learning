@@ -23,9 +23,15 @@ public class BoardController {
 
     @PostMapping("/board/writeProcess")
     //public String boardWriteProcess(String title, String content) {   //-- Board Entity 만들기 전
-    public String boardWriteProcess(Board board) {
+    public String boardWriteProcess(Board board, Model model) {
         boardService.write(board);
-        return "";
+        //-- 나중에 이거 return 값으로 0,1 받아와서 분기 나눠서, 글 작성 완료/실패 처리할 수도 있음
+
+        model.addAttribute("message", "글 작성이 완료되었습니다.");
+        model.addAttribute("searchUrl", "/board/list");
+
+        //return "redirect:/board/list";    //-- message.html 만들고나서 수정함
+        return "message";
     }
 
     @GetMapping("/board/list")
