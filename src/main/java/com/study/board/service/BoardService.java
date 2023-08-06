@@ -4,8 +4,11 @@ import com.study.board.entity.Board;
 import com.study.board.repository.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class BoardService {
@@ -14,7 +17,26 @@ public class BoardService {
     private BoardRepository boardRepository;
 
     // 글 작성 처리
-    public void write(Board board) {
+    public void write(Board board, MultipartFile file) throws Exception {
+        // 현재 프로젝트 경로를 담는다. + 파일 저장할 디렉토리 파일 경로 추가
+        String projectPath = System.getProperty("user.dir") + "\\src\\main\\resources\\static\\files";
+
+        // 파일이름에 붙일 랜덤이름을 생성해준다.
+        UUID uuid = UUID.randomUUID();
+
+        // '랜덤이름_파일이름'으로 파일이름을 생성해준다.
+        String fileName = uuid + "_" + file.getOriginalFilename();
+
+        // "파일을 생성할건데, projectPath에 넣을거고, 이름은 fileName으로 담긴다"는 의미이다.
+        File saveFile = new File(projectPath, fileName);
+
+        // transferTo() 는 IOException에 대처하라는 경고문구가 뜨니까 예외 처리해줘야 한다.
+        //--→ 여기서는 throws Exception으로 처리
+        file.transferTo(saveFile);
+
+        board.setFilename(fileName);
+        board.setFilepath("/files/" + fileName);
+
         // jpa @repository 자체에 save(@entity)라고 저장해주는 메서드 있음
         boardRepository.save(board);
     }

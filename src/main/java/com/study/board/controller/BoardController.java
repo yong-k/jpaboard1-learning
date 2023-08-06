@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 public class BoardController {
@@ -23,8 +24,9 @@ public class BoardController {
 
     @PostMapping("/board/writeProcess")
     //public String boardWriteProcess(String title, String content) {   //-- Board Entity 만들기 전
-    public String boardWriteProcess(Board board, Model model) {
-        boardService.write(board);
+    public String boardWriteProcess(Board board, Model model, MultipartFile file) throws Exception {
+
+        boardService.write(board, file);
         //-- 나중에 이거 return 값으로 0,1 받아와서 분기 나눠서, 글 작성 완료/실패 처리할 수도 있음
 
         model.addAttribute("message", "글 작성이 완료되었습니다.");
@@ -62,14 +64,15 @@ public class BoardController {
     }
 
     @PostMapping("/board/update/{id}")
-    public String boardUpdate(@PathVariable("id") Integer id, Board board) {
+    // ★★ boardwrite.html에서 input태그 name="file"과 MultipartFile 변수 이름 file이 일치해야 받아와진다.
+    public String boardUpdate(@PathVariable("id") Integer id, Board board, MultipartFile file) throws Exception {
         // id로 기존 게시물을 찾아서, 수정된 내용으로 set한다.
         Board boardTemp = boardService.boardView(id);
         boardTemp.setTitle(board.getTitle());
         boardTemp.setContent(board.getContent());
 
         // 그 내용으로 다시 저장(덮어쓰기)
-        boardService.write(board);
+        boardService.write(board, file);
 
         return "redirect:/board/view?id=" + id;
     }
