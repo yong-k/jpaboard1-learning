@@ -36,6 +36,15 @@
         </tr>
         </tbody>
     </table>
+
+    <!-- th:block은 굳이 태그로 감쌀 필요가 없는 부분을 타임리프 문법 써야할 때 씀 -->
+    <!-- startPage에서 시작해서, endPage까지 반복할 것이다. -->
+    <th:block th:each="page:${#numbers.sequence(startPage, endPage)}">
+        <!-- 만약 page가 nowPage와 다르다면 list로 보낼 때 page-1해서 보냄-->
+        <a th:if="${page != nowPage}" th:href="@{/board/list(page=${page - 1})}" th:text="${page}"></a>
+        <!-- 만약 page가 nowPage와 같다면 눌렀을 때 이동하지 않도록 a태그 아니게 강조 처리-->
+        <strong th:if="${page == nowPage}" th:text="${page}" style="color:red"></strong>
+    </th:block>
 </div>
 </body>
 </html>

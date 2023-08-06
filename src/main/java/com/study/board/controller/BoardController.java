@@ -3,6 +3,7 @@ package com.study.board.controller;
 import com.study.board.entity.Board;
 import com.study.board.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -48,7 +49,18 @@ public class BoardController {
     // direction: 정렬 순서 (Sort.Direction.ASC / Sort.Direction.DESC)
     @GetMapping("/board/list")
     public String boardList(Model model, @PageableDefault(page=0,size=10,sort="id",direction=Sort.Direction.DESC) Pageable pageable) {
-        model.addAttribute("list", boardService.boardList(pageable));
+
+        Page<Board> list = boardService.boardList(pageable);
+
+        // ┌→ pageable에서 넘어온 현재 페이지 번호를 가져온다.(pageable의 페이지는 0에서 시작하기 때문에 1 더해준다.)
+        int nowPage = list.getPageable().getPageNumber() + 1;       // 현재 페이지
+        int startPage = Math.max(nowPage - 4, 1);                   // 블럭에서 보여줄 시작 페이지
+        int endPage = Math.min(nowPage + 5, list.getTotalPages());  // 블럭에서 보여줄 마지막 페이지
+
+        model.addAttribute("list", list);
+        model.addAttribute("nowPage", nowPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
         return "boardlist";
     }
 
