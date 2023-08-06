@@ -52,6 +52,11 @@ public class BoardService {
         //    이 경우에는 Page라는 클래스로 return하므로 return 타입을 Page로 수정한다.
     }
 
+    // 게시글 검색
+    public Page<Board> boardSearchList(String searchKeyword, Pageable pageable) {
+        return boardRepository.findByTitleContaining(searchKeyword, pageable);
+    }
+
     // 특정 게시글 불러오기
     public Board boardView(Integer id) {
         // jpa @repository 자체에 Id로 지정한 걸로 entity 찾는 findById() 메서드 있음

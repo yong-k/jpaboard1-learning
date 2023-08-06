@@ -48,9 +48,17 @@ public class BoardController {
     // sort: 정렬 기준 컬럼
     // direction: 정렬 순서 (Sort.Direction.ASC / Sort.Direction.DESC)
     @GetMapping("/board/list")
-    public String boardList(Model model, @PageableDefault(page=0,size=10,sort="id",direction=Sort.Direction.DESC) Pageable pageable) {
+    public String boardList(Model model,
+                            @PageableDefault(page=0,size=10,sort="id",direction=Sort.Direction.DESC) Pageable pageable,
+                            String searchKeyword) {
 
-        Page<Board> list = boardService.boardList(pageable);
+        // 기존에는 모든 list를 가져왔지만, 이제는 검색했을 때와 검색하지 않았을 때를 구별해서 list를 가져와야 한다.
+        Page<Board> list = null;
+
+        if (searchKeyword == null)
+            list = boardService.boardList(pageable);
+        else
+            list = boardService.boardSearchList(searchKeyword, pageable);
 
         // ┌→ pageable에서 넘어온 현재 페이지 번호를 가져온다.(pageable의 페이지는 0에서 시작하기 때문에 1 더해준다.)
         int nowPage = list.getPageable().getPageNumber() + 1;       // 현재 페이지
