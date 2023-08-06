@@ -3,6 +3,8 @@ package com.study.board.service;
 import com.study.board.entity.Board;
 import com.study.board.repository.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,9 +44,12 @@ public class BoardService {
     }
 
     // 게시글 리스트 처리
-    public List<Board> boardList() {
+    //public List<Board> boardList(Pageable pageable) {     // --Pageable 추가해준 후에 수정
+    public Page<Board> boardList(Pageable pageable) {
         // jpa @repository 자체에 entity List를 반환해주는 findAll() 메서드 있음
-        return boardRepository.findAll();
+        return boardRepository.findAll(pageable);
+        //--→ findAll() 매개변수가 없을 경우에는 return 값이 List로 넘어오는데,
+        //    이 경우에는 Page라는 클래스로 return하므로 return 타입을 Page로 수정한다.
     }
 
     // 특정 게시글 불러오기

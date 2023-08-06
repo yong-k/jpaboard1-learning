@@ -3,6 +3,9 @@ package com.study.board.controller;
 import com.study.board.entity.Board;
 import com.study.board.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
 
 @Controller
 public class BoardController {
@@ -36,9 +40,15 @@ public class BoardController {
         return "message";
     }
 
+    // 페이징처리를 위해 org.springframework.data.domain의 Pageable 인터페이스 사용한다.
+    // @PageableDefault 어노테이션을 사용하여 여러가지 설정해줄 수 있다.
+    // page: default 페이지 수
+    // size: 한 페이지 게시글 수
+    // sort: 정렬 기준 컬럼
+    // direction: 정렬 순서 (Sort.Direction.ASC / Sort.Direction.DESC)
     @GetMapping("/board/list")
-    public String boardList(Model model) {
-        model.addAttribute("list", boardService.boardList());
+    public String boardList(Model model, @PageableDefault(page=0,size=10,sort="id",direction=Sort.Direction.DESC) Pageable pageable) {
+        model.addAttribute("list", boardService.boardList(pageable));
         return "boardlist";
     }
 
